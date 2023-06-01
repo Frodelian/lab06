@@ -1,0 +1,26 @@
+name: Make Drag And Drop Package
+
+on:
+  push:
+    tags:
+      - "v*.*.*-dmg"
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Building preparation
+        run: sudo apt install cmake g++
+          
+      - name: Build Solver App with Drag and Drop Generator
+        run: ./scripts/dragndropPackage.sh
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: solver_application/artifacts/*
+        id: "automatic_releases"
